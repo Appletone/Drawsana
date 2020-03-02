@@ -56,6 +56,17 @@ class ImmediatePanGestureRecognizer: UIGestureRecognizer {
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
     guard trackedTouch == nil, let firstTouch = touches.first, let view = view else { return }
     trackedTouch = firstTouch
+   
+     if #available(iOS 9.1, *) {
+        if trackedTouch!.type != .pencil {
+            self.touchesEnded(touches, with: event)
+            self.reset()
+            return
+        }
+    } else {
+        // Fallback on earlier versions
+    }
+   
     startPoint = firstTouch.location(in: view)
     lastPoint = startPoint
     lastTime = CFAbsoluteTimeGetCurrent()
